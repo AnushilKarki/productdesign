@@ -1,0 +1,12 @@
+import { ProspectInputType, SignUpInputType } from './auth.schema';
+import { PrismaClient } from '@prisma/client';
+export declare const createProspectUser: (prisma: PrismaClient, input: ProspectInputType) => Promise<import(".prisma/client").ProspectUsers>;
+export declare const findProspectUserByEmail: (prisma: PrismaClient, input: string) => Promise<import(".prisma/client").ProspectUsers | null>;
+export declare const createUser: (prisma: PrismaClient, input: SignUpInputType) => Promise<import(".prisma/client").Users>;
+export declare const getUser: (prisma: PrismaClient, id: number) => Promise<import(".prisma/client").Users | null>;
+export declare const deleteUser: (prisma: PrismaClient, id: number) => Promise<import(".prisma/client").Users>;
+export declare const updateUser: (prisma: PrismaClient, id: number, data: any) => Promise<import(".prisma/client").Users>;
+export declare const loginService: (prisma: PrismaClient, input: string) => Promise<import(".prisma/client").Users | null>;
+export declare const findUserByEmail: (prisma: PrismaClient, input: string) => Promise<import(".prisma/client").Users | null>;
+export declare const findUserById: (prisma: PrismaClient, id: number) => Promise<import(".prisma/client").Users | null>;
+export declare const updatePassword: (prisma: PrismaClient, id: number, password: string) => Promise<import(".prisma/client").Users>;

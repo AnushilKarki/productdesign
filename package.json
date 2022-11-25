@@ -1,0 +1,89 @@
+{
+  "name": "base-api",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.ts",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm run build:dev && tsc -p test/tsconfig.json && tap --ts \"test/**/*.test.ts\"",
+    "start": "npm run build:ts && fastify start -l info dist/app.js",
+    "build:ts": "rimraf ./dist && tsc",
+    "build:dev": "tsc",
+    "watch:ts": "tsc -w",
+    "dev": "npm run build:dev && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
+    "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
+    "check-types": "tsc --pretty --noEmit",
+    "check-lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\"",
+    "format": "prettier --ignore-path .gitignore \"src/**/*.+(ts|js|)\" --write",
+    "check-format": "prettier --check .",
+    "test-all": "npm run check-format && npm run check-lint && npm run check-types",
+    "release": "standard-version",
+    "prisma:generate": "prisma generate",
+    "prepare": "husky install"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "lint-staged": {
+    "./src/**/*.{ts,js}": [
+      "yarn test-all"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@fastify/autoload": "^5.0.0",
+    "@fastify/cookie": "^7.3.1",
+    "@fastify/cors": "^8.0.0",
+    "@fastify/jwt": "^6.3.2",
+    "@fastify/multipart": "^7.1.0",
+    "@fastify/redis": "^6.0.0",
+    "@fastify/swagger": "^7.4.1",
+    "@fastify/type-provider-typebox": "^2.2.0",
+    "@prisma/client": "^4.6.1",
+    "@sendgrid/mail": "^7.7.0",
+    "@sinclair/typebox": "^0.24.26",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.30.1",
+    "fastify": "^4.0.0",
+    "fastify-cli": "^4.4.0",
+    "fastify-plugin": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "pump": "^3.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/connect-redis": "^0.0.18",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "^18.0.0",
+    "@types/pump": "^1.1.1",
+    "@types/tap": "^15.0.5",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "concurrently": "^7.0.0",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "fastify-tsconfig": "^1.0.1",
+    "husky": "^7.0.0",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "prisma": "^4.1.1",
+    "rimraf": "^3.0.2",
+    "standard-version": "^9.5.0",
+    "tap": "^16.1.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  }
+}

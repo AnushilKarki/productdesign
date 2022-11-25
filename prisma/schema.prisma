@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model ProspectUsers {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  is_deleted  Boolean? @default(false)
+  is_verified Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+
+model Users {
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
+  isVerifiedEmail Boolean?   @default(false)
+  profile         Profile?
+  name       String
+  password   String
+  phone      String
+  image      String?
+  role      String
+  roles           UserRoles[]
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
+}
+
+model Profile {
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  fullName      String
+  password      String
+  country       String
+  phone         String
+  domain        String?
+  profile       String?
+  refererSource String?
+  users          Users    @relation(fields: [userId], references: [id])
+  userId        Int     @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+model UserRoles {
+  assigned_at DateTime @default(now())
+  assigned_by String?
+  Users       Users    @relation(fields: [usersId], references: [id])
+  usersId     Int
+  Roles       Roles    @relation(fields: [rolesId], references: [id])
+  rolesId     Int
+
+  @@id([usersId, rolesId])
+}
+
+model Roles {
+  id              Int                @id @default(autoincrement())
+  title           String
+  users           UserRoles[]
+  created_by      String
+  updated_by      String?
+  is_deleted      Boolean            @default(false)
+  created_at      DateTime           @default(now())
+  updated_at      DateTime           @updatedAt
+  ModuleRoles     ModuleRoles[]
+  rolePermissions RolesPermissions[]
+}
+
+model ModuleRoles {
+  assigned_at DateTime @default(now())
+  assigned_by String?
+  Roles       Roles    @relation(fields: [rolesId], references: [id])
+  rolesId     Int
+  Modules     Modules? @relation(fields: [modulesId], references: [id])
+  modulesId   Int
+
+  @@id([rolesId, modulesId])
+}
+
+model Modules {
+  id                Int                 @id @default(autoincrement())
+  title             String
+  roles             ModuleRoles[]
+  ModulePermissions ModulePermissions[]
+  created_by        String?
+  updated_by        String?
+  is_deleted        Boolean?            @default(false)
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+}
+
+model ModulePermissions {
+  assigned_at     DateTime           @default(now())
+  assigned_by     String?
+  Modules         Modules            @relation(fields: [modulesId], references: [id])
+  modulesId       Int
+  Permissions    Permissions       @relation(fields: [permisssionsId], references: [id])
+  permisssionsId  Int
+  rolePermissions RolesPermissions[]
+
+  @@id([modulesId, permisssionsId])
+}
+
+model Permissions {
+  id         Int                 @id @default(autoincrement())
+  title      String
+  modules    ModulePermissions[]
+  created_by String
+  updated_by String
+  is_deleted Boolean             @default(false)
+  created_at DateTime            @default(now())
+  update_at  DateTime            @updatedAt
+}
+
+model RolesPermissions {
+  Roles                           Roles              @relation(fields: [rolesId], references: [id])
+  rolesId                         Int
+  ModulePermissions               ModulePermissions? @relation(fields: [modulePermissionsModulesId, modulePermissionsPermisssionsId], references: [modulesId, permisssionsId])
+  modulePermissionsModulesId      Int
+  modulePermissionsPermisssionsId Int
+
+  @@id([rolesId, modulePermissionsModulesId])
+}
